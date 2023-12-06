@@ -5,8 +5,8 @@ import (
 
 	"github.com/gin-gonic/gin"
 	docs "github.com/miracle-kang/plc-gw/docs"
+	swaggerFiles "github.com/swaggo/files"
 	ginSwagger "github.com/swaggo/gin-swagger"
-	"github.com/swaggo/gin-swagger/swaggerFiles"
 )
 
 func Startup(port int) error {

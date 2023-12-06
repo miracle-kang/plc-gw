@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"io/ioutil"
 	"log"
 	"os"
 	"path/filepath"
@@ -34,7 +33,7 @@ func SavePLC(plc *PLCDO) error {
 	if err != nil {
 		return err
 	}
-	return ioutil.WriteFile(filepath.Join(config.PLC.BasePath, filename), data, 0644)
+	return os.WriteFile(filepath.Join(config.PLC.BasePath, filename), data, 0644)
 }
 
 func DeletePLC(sn, name string) error {
@@ -60,7 +59,7 @@ func QueryPLCs() ([]*PLCDO, error) {
 	if b, _ := pkg.ExistsFile(config.PLC.BasePath); !b {
 		return []*PLCDO{}, nil
 	}
-	files, err := ioutil.ReadDir(config.PLC.BasePath)
+	files, err := os.ReadDir(config.PLC.BasePath)
 	if err != nil {
 		return nil, err
 	}
@@ -69,7 +68,7 @@ func QueryPLCs() ([]*PLCDO, error) {
 		if file.IsDir() {
 			continue
 		}
-		data, err := ioutil.ReadFile(filepath.Join(config.PLC.BasePath, file.Name()))
+		data, err := os.ReadFile(filepath.Join(config.PLC.BasePath, file.Name()))
 		if err != nil {
 			return nil, err
 		}
