@@ -1,0 +1,282 @@
+definitions:
+  api.BaseResponse:
+    properties:
+      Data:
+        type: object
+      Message:
+        type: string
+      Result:
+        type: boolean
+    type: object
+  api.ClearGatewayCommand:
+    properties:
+      DeviceNames:
+        items:
+          type: string
+        type: array
+      SN:
+        type: string
+    type: object
+  api.GatewayDto:
+    properties:
+      IP:
+        type: string
+      Online:
+        type: boolean
+      PLCs:
+        items:
+          type: string
+        type: array
+      SN:
+        type: string
+    type: object
+  api.PLCDto:
+    properties:
+      ConnState:
+        type: boolean
+      LastReport:
+        type: string
+      LastWrite:
+        type: string
+      Name:
+        type: string
+      RTags:
+        items:
+          $ref: '#/definitions/api.TagDto'
+        type: array
+      SN:
+        type: string
+      WTags:
+        items:
+          $ref: '#/definitions/api.TagDto'
+        type: array
+    type: object
+  api.ReadTagCommand:
+    properties:
+      Data:
+        items:
+          type: string
+        type: array
+      DeviceName:
+        type: string
+      SN:
+        type: string
+    type: object
+  api.ReportDataCommand:
+    properties:
+      Data:
+        additionalProperties: true
+        type: object
+      DeviceName:
+        type: string
+      GetDataError:
+        type: object
+      SN:
+        type: string
+      Time:
+        type: string
+    type: object
+  api.ReportDataResponse:
+    properties:
+      Data:
+        additionalProperties: true
+        type: object
+      DeviceName:
+        type: string
+    type: object
+  api.TagDto:
+    properties:
+      Name:
+        type: string
+      Value:
+        type: object
+    type: object
+  api.WriteTagCommand:
+    properties:
+      DeviceName:
+        type: string
+      SN:
+        type: string
+      WTagName:
+        type: string
+      WTagValue:
+        type: object
+    type: object
+info:
+  contact: {}
+paths:
+  /control/clearGateway:
+    post:
+      consumes:
+      - application/json
+      description: clear gateway or plcs tags
+      operationId: control-clear-gateway
+      parameters:
+      - description: Clear Gateway
+        in: body
+        name: command
+        required: true
+        schema:
+          $ref: '#/definitions/api.ClearGatewayCommand'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/api.BaseResponse'
+      summary: clear gateway or plcs tags
+      tags:
+      - control
+  /control/clearGatewayFile:
+    post:
+      consumes:
+      - application/json
+      description: clear gateway or plcs files
+      operationId: control-clear-gateway-file
+      parameters:
+      - description: Clear Gateway
+        in: body
+        name: command
+        required: true
+        schema:
+          $ref: '#/definitions/api.ClearGatewayCommand'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/api.BaseResponse'
+      summary: clear gateway or plcs files
+      tags:
+      - control
+  /control/readTagsValueByNameList:
+    post:
+      consumes:
+      - application/json
+      description: Read tag value by name list
+      operationId: control-read-tag
+      parameters:
+      - description: Read Tags
+        in: body
+        name: command
+        required: true
+        schema:
+          $ref: '#/definitions/api.ReadTagCommand'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/api.BaseResponse'
+            - properties:
+                Data:
+                  items:
+                    $ref: '#/definitions/api.TagDto'
+                  type: array
+              type: object
+      summary: Read tag value by name list
+      tags:
+      - control
+  /control/writeTagValueByName:
+    post:
+      consumes:
+      - application/json
+      description: write tag value by name
+      operationId: control-write-tag
+      parameters:
+      - description: Write Tag
+        in: body
+        name: command
+        required: true
+        schema:
+          $ref: '#/definitions/api.WriteTagCommand'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/api.BaseResponse'
+      summary: write tag value by name
+      tags:
+      - control
+  /manager/gateways:
+    get:
+      consumes:
+      - application/json
+      description: List gateways
+      operationId: manager-list-gateways
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/api.BaseResponse'
+            - properties:
+                Data:
+                  items:
+                    $ref: '#/definitions/api.GatewayDto'
+                  type: array
+              type: object
+      summary: List gateways
+      tags:
+      - manager
+  /manager/gateways/{sn}/plcs:
+    get:
+      consumes:
+      - application/json
+      description: List gateway PLCs
+      operationId: manager-list-gateway-plcs
+      parameters:
+      - description: Gateway SN
+        in: path
+        name: sn
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/api.BaseResponse'
+            - properties:
+                Data:
+                  items:
+                    $ref: '#/definitions/api.PLCDto'
+                  type: array
+              type: object
+      summary: List gateway PLCs
+      tags:
+      - manager
+  /report:
+    post:
+      consumes:
+      - application/json
+      description: Gateway report data
+      operationId: report-data
+      parameters:
+      - description: Report Data
+        in: body
+        name: command
+        required: true
+        schema:
+          $ref: '#/definitions/api.ReportDataCommand'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/api.ReportDataResponse'
+      summary: Gateway report data
+      tags:
+      - report
+swagger: "2.0"

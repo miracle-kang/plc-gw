@@ -1,0 +1,6 @@
+dist
+vendor
+data
+*.zip
+.DS_Store
+.vscode

@@ -1,0 +1,10 @@
+server:
+  port: 8080
+logging:
+  path: /tmp/plc-gw/log
+  max-size: 100M
+  max-file: 10
+plc:
+  basepath: /tmp/plc-gw/plc
+  check-interval: 1
+  timeout-seconds: 30
